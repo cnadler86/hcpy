@@ -63,7 +63,7 @@ class HCDevice:
         self.features = device.get("features")
         self.name = device.get("name")
         self.session_id = None
-        self.tx_msg_id = None
+        self.tx_msg_id:int|None = None
         self.device_name = "hcpy"
         self.device_id = "0badcafe"
         self.debug = debug
@@ -380,7 +380,8 @@ class HCDevice:
             self.ws.send(msg)
         except Exception as e:
             print(self.name, "Failed to send", e, msg, traceback.format_exc())
-        self.tx_msg_id += 1
+        if self.tx_msg_id is not None:
+            self.tx_msg_id += 1
 
     def reconnect(self):
         # Receive initialization message /ei/initialValues
@@ -457,7 +458,7 @@ class HCDevice:
 
                 threading.Thread(target=self.reconnect).start()
             else:
-                self.print("Unknown resource", resource, file=sys.stderr)
+                print(now(), self.name, "Unknown resource", resource, file=sys.stderr)
 
         elif action == "RESPONSE" or action == "NOTIFY":
             if resource == "/iz/info" or resource == "/ci/info":

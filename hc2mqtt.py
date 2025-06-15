@@ -139,7 +139,10 @@ def hc2mqtt(
         f"{mqtt_ssl=} {mqtt_cafile=} {mqtt_certfile=} {mqtt_keyfile=} {mqtt_clientname=}"
         f"{domain_suffix=} {debug=} {ha_discovery=}"
     )
-
+    #get fullpath of devices_file
+    if not devices_file.startswith("/"):
+        import os
+        devices_file = os.path.join(os.path.dirname(__file__), devices_file)
     with open(devices_file, "r") as f:
         devices = json.load(f)
 
